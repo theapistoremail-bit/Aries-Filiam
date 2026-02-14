@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+
+/* --- VARIABLES --- */
+:root {
+  --gradient-start: #3a007d;
+  --gradient-end: #ff0084;
+  --text-color: #ffffff;
+  --accent-color: #8a2be2;
+  --bg-color: #1c1c1c;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+/* --- HEADER --- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- HERO --- */
+.hero {
+  height: 100vh;
+  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+.hero::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: rgba(0,0,0,0.45);
+}
+
+.hero .content {
+  position: relative;
+  z-index: 5;
+  max-width: 800px;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin: 0;
+}
+
+.hero p {
+  font-size: 1.3rem;
+  margin: 1rem 0 2rem;
+  opacity: 0.9;
+}
+
+.hero a {
+  padding: 0.8rem 2.2rem;
+  border-radius: 30px;
+  background: var(--accent-color);
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- SECTIONS --- */
+.section {
+  padding: 5rem 2rem;
+}
+
+.section h2 {
+  text-align: center;
+  font-size: 2.6rem;
+  margin-bottom: 3rem;
+  color: var(--gradient-end);
+  letter-spacing: 1px;
+}
+
+/* --- CARDS --- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 2.5rem;
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  background: var(--bg-color);
+  border: 1px solid var(--gradient-end);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 1.4rem;
+  margin: 0.5rem 0;
+}
+
+.card p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  line-height: 1.5;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(255,0,132,0.25);
+}
+
+/* --- FOOTER --- */
+footer {
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Aries Filiam</div>
+  <nav>
+    <ul>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="circular-window">
+  
+
+  <div class="content">
+    <h1>WEB DEVELOPMENT</h1>
+    <p>Selected works exploring identity, pop tension and digital ritual.</p>
+    <a href="#works">Enter</a>
+  </div>
+</section>
+
+<section class="section" id="works">
+  <h2>SELECTED WORK</h2>
+
+  <div class="cards">
+    <!-- 20 PHOTO CARDS -->
+    <!-- Cambia links e imágenes cuando quieras -->
+
+    <!-- PHOTO LOOP -->
+    <!-- 1–20 -->
+    <!-- Reemplaza solo href e img -->
+
+    <!-- PHOTO 01 -->
+    <a href="https://stackblitz.com/edit/stackblitz-starters-kub7zzfm?file=package.json" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Desktop\Captura de pantalla 2026-02-09 134943.png">
+        <h3>Photography I</h3>
+        <p>Exploration of light and emotional tension.</p>
+      </div>
+    </a>
+
+    <!-- PHOTO 02 -->
+    <a href="https://stackblitz.com/edit/photo-02" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Desktop\Captura de pantalla 2026-02-10 094137.png">
+        <h3>Photography II</h3>
+        <p>Atmospheric portrait studies.</p>
+      </div>
+    </a>
+
+    <!-- PHOTO 03 -->
+    <a href="https://stackblitz.com/edit/photo-03" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Desktop\Captura de pantalla 2026-02-10 094802.png">
+        <h3>Photography III</h3>
+        <p>Urban silence and geometry.</p>
+      </div>
+    </a>
+
+    <!-- PHOTO 04–20 (resumen para claridad, estructura idéntica) -->
+    <!-- Duplica y cambia número / texto si deseas variación -->
+
+    <!-- PHOTO 04 -->
+    <a href="https://stackblitz.com/edit/photo-04" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Desktop\Captura de pantalla 2026-02-10 095900.png">
+        <h3>Photography IV</h3>
+        <p>Conceptual framing.</p>
+      </div>
+    </a>
+
+    <!-- PHOTO 05 -->
+    <a href="https://stackblitz.com/edit/stackblitz-starters-olldjpm2?file=package.json" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="assets/photos/photo-05.jpg">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 06 -->
+    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 090403.png">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 07 -->
+    <a href="https://stackblitz.com/edit/stackblitz-starters-jz3arnqo?file=index.html" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 094232.png">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 08 -->
+    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="assets/photos/photo-05.jpg">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 08 -->
+    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="assets/photos/photo-05.jpg">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 09 -->
+    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 085315.png">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+        <!-- PHOTO 10-->
+    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
+      <div class="card">
+        <img src="assets/photos/photo-05.jpg">
+        <h3>Photography V</h3>
+        <p>Minimal compositions.</p>
+      </div>
+    </a>
+    <!-- PHOTO 06–20 -->
+    <!-- Continúa mismo patrón -->
+  </div
+</section>
+
+<footer id="contact">
+  © 2025 Aries Filiam — All rights reserved
+</footer>
+
+</body>
+</html>
