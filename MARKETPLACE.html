@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aries Filiam — Template Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --plum:   #3a007d;
+      --rose:   #ff0084;
+      --violet: #8a2be2;
+      --ink:    #0f0f14;
+      --paper:  #1a1a24;
+      --card:   #22222e;
+      --muted:  rgba(255,255,255,0.45);
+      --white:  #ffffff;
+      --gold:   #e8c97e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* ─── CURSOR ─── */
+    * { cursor: none; }
+    #cursor {
+      position: fixed; width: 12px; height: 12px;
+      background: var(--rose); border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: transform 0.1s, width 0.25s, height 0.25s, background 0.25s;
+    }
+    #cursor.grow { width: 36px; height: 36px; background: rgba(255,0,132,0.3); }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 1000; opacity: 0.55;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: sticky; top: 0; z-index: 500;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 3rem;
+      background: rgba(15,15,20,0.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--white) 40%, var(--rose));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    nav { display: flex; gap: 2rem; align-items: center; }
+    nav a {
+      text-decoration: none; color: var(--muted); font-size: 0.85rem;
+      font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--white); }
+    .btn-nav {
+      padding: 0.5rem 1.4rem;
+      background: linear-gradient(135deg, var(--plum), var(--rose));
+      color: var(--white) !important;
+      border-radius: 30px; font-size: 0.82rem !important;
+      letter-spacing: 0.08em !important;
+      transition: opacity 0.25s !important;
+    }
+    .btn-nav:hover { opacity: 0.8; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(138,43,226,0.18) 0%, transparent 70%);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,0,132,0.12) 0%, transparent 70%);
+      top: 30%; left: 65%;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 1.4rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; display: block; width: 40px; height: 1px; background: var(--rose);
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      font-weight: 300; line-height: 1.05;
+      letter-spacing: -0.01em;
+      position: relative; z-index: 2;
+    }
+    .hero h1 em {
+      font-style: italic; color: var(--rose);
+    }
+    .hero-sub {
+      margin-top: 1.5rem; font-size: 1.05rem; font-weight: 300;
+      color: var(--muted); max-width: 500px; line-height: 1.7;
+      position: relative; z-index: 2;
+    }
+    .hero-actions {
+      margin-top: 2.5rem; display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center; position: relative; z-index: 2;
+    }
+    .btn-primary {
+      padding: 0.85rem 2.4rem;
+      background: linear-gradient(135deg, var(--plum), var(--rose));
+      color: var(--white); text-decoration: none;
+      border-radius: 40px; font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.05em;
+      box-shadow: 0 8px 32px rgba(255,0,132,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,0,132,0.45); }
+    .btn-ghost {
+      padding: 0.85rem 2.4rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white); text-decoration: none;
+      border-radius: 40px; font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--rose); background: rgba(255,0,132,0.07); }
+
+    /* stats bar */
+    .stats-bar {
+      margin-top: 5rem; display: flex; gap: 3.5rem;
+      justify-content: center; flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 2.5rem; position: relative; z-index: 2;
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem; font-weight: 600;
+      background: linear-gradient(90deg, var(--white), var(--rose));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem; }
+
+    /* ─── FILTER BAR ─── */
+    .filter-section {
+      padding: 2.5rem 3rem 0;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .filter-label { font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-right: 0.5rem; }
+    .filter-pill {
+      padding: 0.4rem 1.1rem;
+      border-radius: 20px; font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--muted); background: transparent;
+      cursor: none; transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.04em;
+    }
+    .filter-pill:hover, .filter-pill.active {
+      border-color: var(--rose); color: var(--white); background: rgba(255,0,132,0.1);
+    }
+    .filter-pill.active { color: var(--rose); }
+    .search-wrap {
+      margin-left: auto;
+      display: flex; align-items: center;
+      background: var(--card); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 30px; padding: 0.45rem 1.2rem; gap: 0.5rem;
+    }
+    .search-wrap input {
+      background: transparent; border: none; outline: none;
+      color: var(--white); font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
+      width: 180px;
+    }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-icon { color: var(--muted); font-size: 0.9rem; }
+
+    /* ─── GRID ─── */
+    .grid-section { padding: 2.5rem 3rem 5rem; }
+    .grid-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem; font-weight: 300; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      border-color: rgba(255,0,132,0.2);
+    }
+    .card-preview {
+      position: relative; height: 200px; overflow: hidden;
+    }
+    /* Each card gets a unique gradient "preview" */
+    .card-preview .preview-bg {
+      width: 100%; height: 100%; transition: transform 0.5s;
+    }
+    .card:hover .preview-bg { transform: scale(1.05); }
+
+    .preview-1 { background: linear-gradient(135deg, #1a0040 0%, #6b0fa0 50%, #ff0084 100%); }
+    .preview-2 { background: linear-gradient(135deg, #001a3a 0%, #0066cc 50%, #00d4ff 100%); }
+    .preview-3 { background: linear-gradient(135deg, #1a1a00 0%, #7a5c00 50%, #ffd700 100%); }
+    .preview-4 { background: linear-gradient(135deg, #0d1f0d 0%, #1a5c1a 50%, #39ff14 100%); }
+    .preview-5 { background: linear-gradient(135deg, #1a0010 0%, #8b0038 50%, #ff4d6d 100%); }
+    .preview-6 { background: linear-gradient(135deg, #0a0a1a 0%, #1a1a4a 50%, #4040ff 100%); }
+
+    /* mock UI lines on preview */
+    .preview-ui {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      padding: 1.5rem; gap: 0.5rem; justify-content: flex-end;
+    }
+    .ui-bar { height: 6px; border-radius: 3px; background: rgba(255,255,255,0.15); }
+    .ui-bar.short { width: 40%; }
+    .ui-bar.mid   { width: 65%; }
+    .ui-bar.long  { width: 85%; }
+    .ui-circle {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      position: absolute; top: 1.2rem; right: 1.2rem;
+    }
+
+    /* badge */
+    .badge {
+      position: absolute; top: 1rem; left: 1rem;
+      padding: 0.25rem 0.7rem; border-radius: 20px;
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .badge-new  { background: var(--rose); color: #fff; }
+    .badge-hot  { background: var(--gold); color: #1a1a00; }
+    .badge-free { background: rgba(57,255,20,0.15); color: #39ff14; border: 1px solid rgba(57,255,20,0.3); }
+
+    /* card body */
+    .card-body { padding: 1.25rem 1.5rem 1.5rem; }
+    .card-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.6rem;
+    }
+    .card-category { font-size: 0.7rem; color: var(--rose); letter-spacing: 0.1em; text-transform: uppercase; }
+    .card-rating { font-size: 0.75rem; color: var(--gold); }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem; font-weight: 600; margin-bottom: 0.4rem;
+    }
+    .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.2rem; }
+    .card-footer {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 600;
+    }
+    .card-price span { font-size: 0.8rem; color: var(--muted); font-family: 'DM Sans', sans-serif; font-weight: 300; }
+    .btn-buy {
+      padding: 0.5rem 1.4rem;
+      background: linear-gradient(135deg, var(--plum), var(--rose));
+      color: var(--white); border: none;
+      border-radius: 25px; font-size: 0.8rem; font-weight: 500;
+      font-family: 'DM Sans', sans-serif; letter-spacing: 0.06em;
+      cursor: none; transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-buy:hover { opacity: 0.85; transform: scale(1.04); }
+
+    /* wishlist heart */
+    .wishlist-btn {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(15,15,20,0.6); backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; cursor: none;
+      transition: background 0.2s, transform 0.2s;
+      z-index: 5;
+    }
+    .wishlist-btn:hover { background: rgba(255,0,132,0.3); transform: scale(1.1); }
+
+    /* ─── FEATURED BANNER ─── */
+    .featured-banner {
+      margin: 0 3rem 2rem;
+      border-radius: 20px;
+      background: linear-gradient(120deg, #1a003a 0%, #3a007d 40%, #ff0084 100%);
+      padding: 3rem 3.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 2rem; flex-wrap: wrap;
+      position: relative; overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .featured-banner::before {
+      content: '★';
+      position: absolute; right: -1rem; top: -2rem;
+      font-size: 12rem; opacity: 0.04; line-height: 1;
+    }
+    .featured-text h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300;
+    }
+    .featured-text h3 em { color: var(--gold); font-style: italic; }
+    .featured-text p { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+    .featured-actions { display: flex; gap: 1rem; align-items: center; flex-shrink: 0; }
+    .old-price { text-decoration: line-through; color: var(--muted); font-size: 0.9rem; }
+    .new-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 600; color: var(--gold);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #0a0a0f;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding: 3rem 3rem 2rem;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem;
+    }
+    .footer-brand .logo { font-size: 1.2rem; margin-bottom: 0.75rem; display: block; }
+    .footer-brand p { font-size: 0.85rem; color: var(--muted); line-height: 1.7; max-width: 260px; }
+    .footer-col h4 {
+      font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 1rem;
+    }
+    .footer-col a {
+      display: block; text-decoration: none;
+      color: rgba(255,255,255,0.6); font-size: 0.85rem;
+      margin-bottom: 0.6rem; transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--rose); }
+    .footer-bottom {
+      padding: 1.5rem 3rem;
+      display: flex; justify-content: space-between;
+      font-size: 0.75rem; color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.04);
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--card); border: 1px solid rgba(255,0,132,0.3);
+      color: var(--white); padding: 0.9rem 2rem;
+      border-radius: 40px; font-size: 0.85rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 2000; white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      header { padding: 1rem 1.5rem; }
+      nav { gap: 1rem; }
+      .filter-section, .grid-section { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .featured-banner { margin: 0 1.5rem 2rem; }
+      footer { grid-template-columns: 1fr 1fr; }
+      .footer-bottom { padding: 1.5rem; }
+    }
+    @media (max-width: 600px) {
+      .stats-bar { gap: 2rem; }
+      footer { grid-template-columns: 1fr; }
+      .search-wrap { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- custom cursor -->
+<div id="cursor"></div>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <div class="logo">Aries Filiam</div>
+  <nav>
+    <a href="#marketplace">Marketplace</a>
+    <a href="#featured">Featured</a>
+    <a href="#about">About</a>
+    <a href="#" class="btn-nav">Sell a Template</a>
+  </nav>
+</header>
+
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-eyebrow">Luxury Web Art</div>
+
+  <h1>The <em>Finest</em> Templates<br>for Bold Creators</h1>
+  <p class="hero-sub">Handcrafted, production-ready web templates. Minimal form. Maximum meaning. Built for those who refuse ordinary.</p>
+
+  <div class="hero-actions">
+    <a href="#marketplace" class="btn-primary">Browse Templates</a>
+    <a href="#featured" class="btn-ghost">See Featured</a>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-number">240+</div>
+      <div class="stat-label">Templates</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">18k</div>
+      <div class="stat-label">Happy Buyers</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4.9★</div>
+      <div class="stat-label">Average Rating</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">72h</div>
+      <div class="stat-label">Support Response</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURED DEAL ─── -->
+<div class="featured-banner" id="featured">
+  <div class="featured-text">
+    <h3>This Week's <em>Obsession</em></h3>
+    <p>Lumina Pro — a full SaaS landing page with 14 sections, dark & light mode, and Figma source.</p>
+  </div>
+  <div class="featured-actions">
+    <div>
+      <div class="old-price">$79</div>
+      <div class="new-price">$39</div>
+    </div>
+    <a href="#" class="btn-primary" onclick="showToast('Lumina Pro added to cart ✦'); return false;">Grab the Deal</a>
+  </div>
+</div>
+
+<!-- ─── FILTERS ─── -->
+<div class="filter-section" id="marketplace">
+  <span class="filter-label">Filter</span>
+  <button class="filter-pill active" onclick="filterCards(this,'all')">All</button>
+  <button class="filter-pill" onclick="filterCards(this,'portfolio')">Portfolio</button>
+  <button class="filter-pill" onclick="filterCards(this,'saas')">SaaS</button>
+  <button class="filter-pill" onclick="filterCards(this,'ecommerce')">E-Commerce</button>
+  <button class="filter-pill" onclick="filterCards(this,'blog')">Blog</button>
+  <button class="filter-pill" onclick="filterCards(this,'agency')">Agency</button>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" placeholder="Search templates…" oninput="searchCards(this.value)" />
+  </div>
+</div>
+
+<!-- ─── GRID ─── -->
+<section class="grid-section">
+  <h2>240 Templates Available</h2>
+  <div class="grid" id="cardGrid">
+
+    <!-- Card 1 -->
+    <div class="card" data-category="portfolio">
+      <div class="card-preview">
+        <div class="preview-bg preview-1"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="badge badge-new">New</div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Portfolio</span>
+          <span class="card-rating">★★★★★ 5.0</span>
+        </div>
+        <div class="card-title">Noir Folio</div>
+        <div class="card-desc">A dark, editorial portfolio for creatives. Full-bleed imagery, scroll animations, and zero compromise.</div>
+        <div class="card-footer">
+          <div class="card-price">$49 <span>one-time</span></div>
+          <button class="btn-buy" onclick="showToast('Noir Folio added to cart ✦')">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card" data-category="saas">
+      <div class="card-preview">
+        <div class="preview-bg preview-2"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="badge badge-hot">Hot</div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">SaaS</span>
+          <span class="card-rating">★★★★★ 4.9</span>
+        </div>
+        <div class="card-title">Lumina Pro</div>
+        <div class="card-desc">Full SaaS landing page. 14 sections, dark & light mode, Figma source included. Ships fast.</div>
+        <div class="card-footer">
+          <div class="card-price">$39 <span>was $79</span></div>
+          <button class="btn-buy" onclick="showToast('Lumina Pro added to cart ✦')">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card" data-category="ecommerce">
+      <div class="card-preview">
+        <div class="preview-bg preview-3"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="badge badge-hot">Hot</div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">E-Commerce</span>
+          <span class="card-rating">★★★★☆ 4.7</span>
+        </div>
+        <div class="card-title">Aurum Shop</div>
+        <div class="card-desc">Luxury e-commerce template with product zoom, cart drawer, and gold-accented aesthetic.</div>
+        <div class="card-footer">
+          <div class="card-price">$69 <span>one-time</span></div>
+          <button class="btn-buy" onclick="showToast('Aurum Shop added to cart ✦')">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card" data-category="blog">
+      <div class="card-preview">
+        <div class="preview-bg preview-4"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="badge badge-free">Free</div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Blog</span>
+          <span class="card-rating">★★★★★ 4.8</span>
+        </div>
+        <div class="card-title">Verdant Journal</div>
+        <div class="card-desc">Clean, editorial blog template. Readability-first with dramatic typography and subtle motion.</div>
+        <div class="card-footer">
+          <div class="card-price">Free</div>
+          <button class="btn-buy" onclick="showToast('Verdant Journal downloaded ✦')">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="card" data-category="agency">
+      <div class="card-preview">
+        <div class="preview-bg preview-5"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="badge badge-new">New</div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Agency</span>
+          <span class="card-rating">★★★★★ 5.0</span>
+        </div>
+        <div class="card-title">Obsidian Studio</div>
+        <div class="card-desc">For design agencies that mean business. Rich micro-interactions, brutalist grid, magnetic cursors.</div>
+        <div class="card-footer">
+          <div class="card-price">$89 <span>one-time</span></div>
+          <button class="btn-buy" onclick="showToast('Obsidian Studio added to cart ✦')">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="card" data-category="portfolio">
+      <div class="card-preview">
+        <div class="preview-bg preview-6"></div>
+        <div class="preview-ui">
+          <div class="ui-circle"></div>
+          <div class="ui-bar long"></div>
+          <div class="ui-bar mid"></div>
+          <div class="ui-bar short"></div>
+        </div>
+        <div class="wishlist-btn" onclick="toggleWish(this)">♡</div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <span class="card-category">Portfolio</span>
+          <span class="card-rating">★★★★☆ 4.6</span>
+        </div>
+        <div class="card-title">Indigo Minimal</div>
+        <div class="card-desc">Ultra-minimal portfolio for photographers and visual artists. Fullscreen gallery with keyboard navigation.</div>
+        <div class="card-footer">
+          <div class="card-price">$35 <span>one-time</span></div>
+          <button class="btn-buy" onclick="showToast('Indigo Minimal added to cart ✦')">Buy Now</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer id="about">
+  <div class="footer-brand">
+    <span class="logo">Aries Filiam</span>
+    <p>Luxury web art for those who believe in clean design, intentional aesthetics, and ideas that speak without shouting.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Marketplace</h4>
+    <a href="#">All Templates</a>
+    <a href="#">Portfolio</a>
+    <a href="#">SaaS</a>
+    <a href="#">E-Commerce</a>
+    <a href="#">Free Templates</a>
+  </div>
+  <div class="footer-col">
+    <h4>Creators</h4>
+    <a href="#">Sell Templates</a>
+    <a href="#">Submission Guide</a>
+    <a href="#">Earnings</a>
+    <a href="#">Creator Forum</a>
+  </div>
+  <div class="footer-col">
+    <h4>Support</h4>
+    <a href="#">Documentation</a>
+    <a href="#">Licenses</a>
+    <a href="#">Refund Policy</a>
+    <a href="#">Contact</a>
+  </div>
+</footer>
+
+<div class="footer-bottom">
+  <span>&copy; 2026 Aries Filiam. All rights reserved.</span>
+  <span>Minimal form. Maximum meaning.</span>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── cursor ── */
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a,button,.filter-pill,.wishlist-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  /* ── filter ── */
+  function filterCards(btn, cat) {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.card').forEach(card => {
+      card.style.display = (cat === 'all' || card.dataset.category === cat) ? '' : 'none';
+    });
+  }
+
+  /* ── search ── */
+  function searchCards(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+      const text = card.innerText.toLowerCase();
+      card.style.display = text.includes(q) ? '' : 'none';
+    });
+  }
+
+  /* ── wishlist toggle ── */
+  function toggleWish(btn) {
+    const liked = btn.textContent === '♥';
+    btn.textContent = liked ? '♡' : '♥';
+    btn.style.color = liked ? '' : '#ff0084';
+    showToast(liked ? 'Removed from wishlist' : 'Added to wishlist ♥');
+  }
+
+  /* ── toast ── */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>
