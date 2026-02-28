@@ -1,304 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aries Filiam — Web Development</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
 <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-
-/* --- VARIABLES --- */
 :root {
-  --gradient-start: #3a007d;
-  --gradient-end: #ff0084;
-  --text-color: #ffffff;
-  --accent-color: #8a2be2;
-  --bg-color: #1c1c1c;
+  --plum:  #3a007d;
+  --rose:  #ff0084;
+  --ink:   #0d0d12;
+  --card:  #16161f;
+  --muted: rgba(255,255,255,0.4);
+  --white: #ffffff;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--white);
   overflow-x: hidden;
 }
 
-/* --- HEADER --- */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999; opacity: 0.5;
+}
+
+/* cursor */
+* { cursor: none; }
+#cur {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--rose); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .25s, height .25s, background .25s;
+}
+#cur.big { width: 44px; height: 44px; background: rgba(255,0,132,.18); }
+
+/* ─── HEADER ─── */
 header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.3rem 3rem;
+  transition: background .4s, box-shadow .4s;
 }
-
+header.scrolled {
+  background: rgba(13,13,18,.92);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 1px 0 rgba(255,255,255,.05);
+}
 .logo {
-  font-size: 1.4rem;
-  font-weight: bold;
-  letter-spacing: 2px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--white) 30%, var(--rose));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  text-decoration: none;
 }
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-}
-
+nav { display: flex; align-items: center; }
 nav a {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: bold;
+  text-decoration: none; color: var(--muted);
+  font-size: .78rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: .4rem 1rem; position: relative; transition: color .2s;
 }
+nav a::after {
+  content: ''; position: absolute; bottom: -2px; left: 1rem;
+  width: 0; height: 1px; background: var(--rose); transition: width .3s;
+}
+nav a:hover { color: var(--white); }
+nav a:hover::after { width: calc(100% - 2rem); }
+.nav-cta {
+  margin-left: .8rem; padding: .5rem 1.4rem !important;
+  background: linear-gradient(135deg, var(--plum), var(--rose));
+  border-radius: 30px; color: var(--white) !important;
+}
+.nav-cta::after { display: none !important; }
 
-/* --- HERO --- */
-.hero {
-  height: 100vh;
-  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ─── PAGE HERO ─── */
+.page-hero {
+  min-height: 38vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding: 9rem 3rem 4rem;
   text-align: center;
-  position: relative;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, #000c1a 0%, #001228 50%, #0d0d12 100%);
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  pointer-events: none; filter: blur(100px);
+}
+.orb-a { width: 600px; height: 600px; background: rgba(0,60,180,.13); top:-15%; left:50%; transform:translateX(-50%); }
+.orb-b { width: 280px; height: 280px; background: rgba(255,0,132,.09); top:10%; right:5%; }
+
+.page-eyebrow {
+  position: relative; z-index: 2;
+  font-size: .68rem; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--rose); margin-bottom: .9rem;
+  display: flex; align-items: center; gap: .7rem;
+}
+.page-eyebrow::before, .page-eyebrow::after {
+  content:''; display:block; width:32px; height:1px; background:var(--rose);
+}
+.page-hero h1 {
+  position: relative; z-index: 2;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 300; line-height: 1.04;
+}
+.page-hero h1 em { font-style: italic; color: var(--rose); }
+.page-hero p {
+  position: relative; z-index: 2;
+  margin-top: 1rem; font-size: .92rem; font-weight: 300;
+  color: var(--muted); max-width: 440px; line-height: 1.8;
 }
 
-.hero::after {
-  content:'';
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,0.45);
+.page-divider {
+  border: none; height: 1px; margin: 0 3rem;
+  background: linear-gradient(90deg, transparent, rgba(255,0,132,.2), transparent);
 }
 
-.hero .content {
-  position: relative;
-  z-index: 5;
-  max-width: 800px;
+/* ─── GRID ─── */
+.gallery-section {
+  padding: 4rem 3rem 8rem;
 }
 
-.hero h1 {
-  font-size: 3.5rem;
-  margin: 0;
-}
-
-.hero p {
-  font-size: 1.3rem;
-  margin: 1rem 0 2rem;
-  opacity: 0.9;
-}
-
-.hero a {
-  padding: 0.8rem 2.2rem;
-  border-radius: 30px;
-  background: var(--accent-color);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* --- SECTIONS --- */
-.section {
-  padding: 5rem 2rem;
-}
-
-.section h2 {
-  text-align: center;
-  font-size: 2.6rem;
-  margin-bottom: 3rem;
-  color: var(--gradient-end);
-  letter-spacing: 1px;
-}
-
-/* --- CARDS --- */
-.cards {
+/* uniform 3-col grid */
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px; /* ultra-thin gap — editorial feel */
+  background: rgba(255,255,255,.04); /* gap color */
+  border: 1px solid rgba(255,255,255,.04);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.card-link {
+/* card */
+.card {
+  position: relative;
+  background: var(--card);
+  aspect-ratio: 4/3;
+  overflow: hidden;
   text-decoration: none;
   color: inherit;
+  display: block;
 }
 
-.card {
-  background: var(--bg-color);
-  border: 1px solid var(--gradient-end);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
+/* image */
 .card img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 1rem;
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .6s cubic-bezier(0.25,0.46,0.45,0.94);
+  display: block;
+}
+.card:hover img { transform: scale(1.07); }
+
+/* gradient fallback */
+.card-bg {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.fb-1 { background: linear-gradient(135deg, #000d22 0%, #001f55 60%, #003399 100%); }
+.fb-2 { background: linear-gradient(135deg, #06001a 0%, #1a0055 60%, #4400bb 100%); }
+.fb-3 { background: linear-gradient(135deg, #000e1a 0%, #001c40 60%, #005580 100%); }
+.fb-4 { background: linear-gradient(135deg, #050012 0%, #0d0033 60%, #2200aa 100%); }
+.fb-5 { background: linear-gradient(135deg, #001022 0%, #00224d 60%, #006699 100%); }
+.fb-6 { background: linear-gradient(135deg, #08001a 0%, #18004d 60%, #5500bb 100%); }
+
+/* decorative grid lines on fallback */
+.card-bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.card-num-bg {
+  position: relative; z-index: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4rem; font-weight: 700;
+  color: rgba(255,255,255,.06);
+  letter-spacing: -.02em;
 }
 
-.card h3 {
-  font-size: 1.4rem;
-  margin: 0.5rem 0;
+/* dark overlay — always subtle, stronger on hover */
+.card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10,10,18,.95) 0%,
+    rgba(10,10,18,.4)  40%,
+    rgba(10,10,18,.0)  70%
+  );
+  transition: background .4s;
+}
+.card:hover .card-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(10,10,18,.98) 0%,
+    rgba(10,10,18,.55) 50%,
+    rgba(10,10,18,.1)  80%
+  );
 }
 
-.card p {
-  font-size: 0.95rem;
-  opacity: 0.85;
-  line-height: 1.5;
+/* info block — slides up on hover */
+.card-info {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.4rem 1.5rem;
+  transform: translateY(4px);
+  transition: transform .35s cubic-bezier(0.25,0.46,0.45,0.94);
+  z-index: 3;
 }
+.card:hover .card-info { transform: translateY(0); }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(255,0,132,0.25);
+.card-index {
+  font-size: .62rem; color: var(--rose);
+  letter-spacing: .18em; margin-bottom: .3rem;
 }
+.card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem; font-weight: 600; line-height: 1.2;
+  margin-bottom: .35rem;
+}
+.card-meta {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-type {
+  font-size: .68rem; color: var(--muted);
+  letter-spacing: .1em; text-transform: uppercase;
+}
+.card-link-icon {
+  display: flex; align-items: center; gap: .35rem;
+  font-size: .68rem; color: var(--rose);
+  letter-spacing: .08em; text-transform: uppercase;
+  opacity: 0; transform: translateX(-4px);
+  transition: opacity .3s, transform .3s;
+}
+.card:hover .card-link-icon { opacity: 1; transform: translateX(0); }
 
-/* --- FOOTER --- */
+/* top badge */
+.card-badge {
+  position: absolute; top: 1rem; left: 1rem; z-index: 3;
+  background: rgba(13,13,18,.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 20px; padding: .22rem .75rem;
+  font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted);
+  transition: border-color .25s, color .25s;
+}
+.card:hover .card-badge { border-color: rgba(255,0,132,.4); color: var(--white); }
+
+/* ─── FOOTER ─── */
 footer {
-  padding: 2rem;
-  text-align: center;
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  padding: 2.5rem 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.04);
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem; font-weight: 700; letter-spacing: .1em;
+  background: linear-gradient(90deg, var(--white), var(--rose));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: .78rem; color: var(--muted); }
+.footer-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: .95rem; color: var(--muted);
+}
+
+/* reveal */
+.card {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .55s, transform .55s, box-shadow .35s;
+}
+.card.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  header { padding: 1rem 1.5rem; }
+  .gallery-section { padding: 3rem 1.5rem 6rem; }
+  .page-hero { padding: 7rem 1.5rem 3rem; }
+  .page-divider { margin: 0 1.5rem; }
+  footer { padding: 2rem 1.5rem; }
+}
+@media (max-width: 540px) {
+  .grid { grid-template-columns: 1fr; }
+  .nav-cta { display: none; }
 }
 </style>
 </head>
-
 <body>
 
-<header>
-  <div class="logo">Aries Filiam</div>
+<div id="cur"></div>
+
+<!-- ─── HEADER ─── -->
+<header id="header">
+  <a href="index.html" class="logo">Aries Filiam</a>
   <nav>
-    <ul>
-      <li><a href="#works">Works</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
+    <a href="index.html">Home</a>
+    <a href="portfolio.html">Works</a>
+    <a href="#contact">Contact</a>
+    <a href="marketplace.html" class="nav-cta">Buy a Template</a>
   </nav>
 </header>
 
-<section class="hero">
-  <div class="circular-window">
-  
+<!-- ─── HERO ─── -->
+<div class="page-hero">
+  <div class="hero-bg"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="page-eyebrow">Selected Works</div>
+  <h1>Web <em>Development</em></h1>
+  <p>Code-driven structures designed to feel fluid, intentional and alive. Click any project to open it in StackBlitz.</p>
+</div>
 
-  <div class="content">
-    <h1>WEB DEVELOPMENT</h1>
-    <p>Selected works exploring identity, pop tension and digital ritual.</p>
-    <a href="#works">Enter</a>
+<hr class="page-divider" />
+
+<!-- ─── GRID ─── -->
+<section class="gallery-section" id="works">
+  <div class="grid">
+
+    <!-- 01 -->
+    <a class="card" href="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-09%20134943.png?raw=true" target="_blank" rel="noopener">
+      <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-09%20134943.png?raw=true" alt="Project I"
+           onerror="this.style.display='none'" />
+      <div class="card-bg fb-1"><div class="card-num-bg">01</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">Live ↗</div>
+      <div class="card-info">
+        <div class="card-index">01 / 10</div>
+        <div class="card-title">Project I</div>
+        <div class="card-meta">
+          <span class="card-type">Website</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 02 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-02" target="_blank" rel="noopener">
+      <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-10%20094137.png?raw=true" alt="Project II"
+           onerror="this.style.display='none'" />
+      <div class="card-bg fb-2"><div class="card-num-bg">02</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">02 / 10</div>
+        <div class="card-title">Project II</div>
+        <div class="card-meta">
+          <span class="card-type">Web App</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 03 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-03" target="_blank" rel="noopener">
+      <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-10%20094802.png?raw=true" alt="Project III"
+           onerror="this.style.display='none'" />
+      <div class="card-bg fb-3"><div class="card-num-bg">03</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">03 / 10</div>
+        <div class="card-title">Project III</div>
+        <div class="card-meta">
+          <span class="card-type">Interactive</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 04 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-04" target="_blank" rel="noopener">
+      <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-12%20094232.png?raw=true" alt="Project IV"
+           onerror="this.style.display='none'" />
+      <div class="card-bg fb-4"><div class="card-num-bg">04</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">04 / 10</div>
+        <div class="card-title">Project IV</div>
+        <div class="card-meta">
+          <span class="card-type">Website</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 05 -->
+    <a class="card" href="https://stackblitz.com/edit/stackblitz-starters-olldjpm2?file=package.json" target="_blank" rel="noopener">
+      <div class="card-bg fb-5"><div class="card-num-bg">05</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">05 / 10</div>
+        <div class="card-title">Starters Project</div>
+        <div class="card-meta">
+          <span class="card-type">Web App</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 06 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-05" target="_blank" rel="noopener">
+      <div class="card-bg fb-6"><div class="card-num-bg">06</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">06 / 10</div>
+        <div class="card-title">Visual Experiment</div>
+        <div class="card-meta">
+          <span class="card-type">Interactive</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 07 -->
+    <a class="card" href="https://stackblitz.com/edit/stackblitz-starters-jz3arnqo?file=index.html" target="_blank" rel="noopener">
+      <div class="card-bg fb-1"><div class="card-num-bg">07</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">07 / 10</div>
+        <div class="card-title">HTML Starter</div>
+        <div class="card-meta">
+          <span class="card-type">Template</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 08 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-08" target="_blank" rel="noopener">
+      <div class="card-bg fb-2"><div class="card-num-bg">08</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">08 / 10</div>
+        <div class="card-title">Dark Portfolio</div>
+        <div class="card-meta">
+          <span class="card-type">Website</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 09 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-09" target="_blank" rel="noopener">
+      <div class="card-bg fb-3"><div class="card-num-bg">09</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">09 / 10</div>
+        <div class="card-title">Dashboard UI</div>
+        <div class="card-meta">
+          <span class="card-type">Web App</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- 10 -->
+    <a class="card" href="https://stackblitz.com/edit/photo-10" target="_blank" rel="noopener">
+      <div class="card-bg fb-4"><div class="card-num-bg">10</div></div>
+      <div class="card-overlay"></div>
+      <div class="card-badge">StackBlitz ↗</div>
+      <div class="card-info">
+        <div class="card-index">10 / 10</div>
+        <div class="card-title">Agency Boilerplate</div>
+        <div class="card-meta">
+          <span class="card-type">Template</span>
+          <span class="card-link-icon">Open ↗</span>
+        </div>
+      </div>
+    </a>
+
   </div>
 </section>
 
-<section class="section" id="works">
-  <h2>SELECTED WORK</h2>
+<hr class="page-divider" />
 
-  <div class="cards">
-    <!-- 20 PHOTO CARDS -->
-    <!-- Cambia links e imágenes cuando quieras -->
-
-    <!-- PHOTO LOOP -->
-    <!-- 1–20 -->
-    <!-- Reemplaza solo href e img -->
-
-    <!-- PHOTO 01 -->
-    <a href="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-09%20134943.png?raw=true" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-09%20134943.png?raw=true">
-        <h3>Photography I</h3>
-        <p>Exploration of light and emotional tension.</p>
-      </div>
-    </a>
-
-    <!-- PHOTO 02 -->
-    <a href="https://stackblitz.com/edit/photo-02" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-10%20094137.png?raw=true">
-        <h3>Photography II</h3>
-        <p>Atmospheric portrait studies.</p>
-      </div>
-    </a>
-
-    <!-- PHOTO 03 -->
-    <a href="https://stackblitz.com/edit/photo-03" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-10%20094802.png?raw=true">
-        <h3>Photography III</h3>
-        <p>Urban silence and geometry.</p>
-      </div>
-    </a>
-
-    <!-- PHOTO 04–20 (resumen para claridad, estructura idéntica) -->
-    <!-- Duplica y cambia número / texto si deseas variación -->
-
-    <!-- PHOTO 04 -->
-    <a href="https://stackblitz.com/edit/photo-04" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/Captura%20de%20pantalla%202026-02-12%20094232.png?raw=true">
-        <h3>Photography IV</h3>
-        <p>Conceptual framing.</p>
-      </div>
-    </a>
-
-    <!-- PHOTO 05 -->
-    <a href="https://stackblitz.com/edit/stackblitz-starters-olldjpm2?file=package.json" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="assets/photos/photo-05.jpg">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 06 -->
-    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 090403.png">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 07 -->
-    <a href="https://stackblitz.com/edit/stackblitz-starters-jz3arnqo?file=index.html" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 094232.png">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 08 -->
-    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="assets/photos/photo-05.jpg">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 08 -->
-    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="assets/photos/photo-05.jpg">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 09 -->
-    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="C:\Users\digit\Pictures\Screenshots\Captura de pantalla 2026-02-12 085315.png">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-        <!-- PHOTO 10-->
-    <a href="https://stackblitz.com/edit/photo-05" class="card-link" target="_blank" rel="noopener noreferrer">
-      <div class="card">
-        <img src="assets/photos/photo-05.jpg">
-        <h3>Photography V</h3>
-        <p>Minimal compositions.</p>
-      </div>
-    </a>
-    <!-- PHOTO 06–20 -->
-    <!-- Continúa mismo patrón -->
-  </div
-</section>
-
+<!-- ─── FOOTER ─── -->
 <footer id="contact">
-  © 2025 Aries Filiam — All rights reserved
+  <div class="footer-logo">Aries Filiam</div>
+  <div class="footer-tagline">Minimal form. Maximum meaning.</div>
+  <div class="footer-copy">© 2026 Aries Filiam — All rights reserved</div>
 </footer>
 
+<script>
+  /* cursor */
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  /* sticky header */
+  window.addEventListener('scroll', () => {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* staggered reveal */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        const idx = [...document.querySelectorAll('.card')].indexOf(e.target);
+        setTimeout(() => e.target.classList.add('visible'), idx * 70);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  document.querySelectorAll('.card').forEach(el => obs.observe(el));
+</script>
 </body>
 </html>
