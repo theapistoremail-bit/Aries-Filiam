@@ -1,333 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aries Filiam — Art, Code & Visual Obsession</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
 <style>
-/* --- NO TOCADO: CIRCULAR WINDOW --- */
-.circular-window {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
+/* ─── RESET & VARS ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-.slideshow {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: flex;
-  animation: slide 12s infinite;
-}
-
-.slide {
-  width: 100%;
-  height: 100%;
-  flex-shrink: 0;
-}
-
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@keyframes slide {
-  0%,33% { transform: translateX(0); }
-  34%,66% { transform: translateX(-100%); }
-  67%,100% { transform: translateX(-200%); }
-}
-
-/* --- VARIABLES --- */
 :root {
-  --gradient-start: #3a007d;
-  --gradient-end: #ff0084;
-  --text-color: #ffffff;
-  --accent-color: #8a2be2;
-  --bg-color: #1c1c1c;
+  --plum:   #3a007d;
+  --rose:   #ff0084;
+  --violet: #8a2be2;
+  --ink:    #0d0d12;
+  --paper:  #14141c;
+  --card:   #1c1c28;
+  --muted:  rgba(255,255,255,0.42);
+  --white:  #ffffff;
+  --gold:   #e8c97e;
 }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--bg-color);
-  color: var(--text-color);
+  font-family: 'DM Sans', sans-serif;
+  background: var(--ink);
+  color: var(--white);
   overflow-x: hidden;
 }
 
-/* --- HEADER --- */
+/* ─── NOISE OVERLAY ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 999; opacity: 0.6;
+}
+
+/* ─── CUSTOM CURSOR ─── */
+* { cursor: none; }
+#cur {
+  position: fixed; width: 10px; height: 10px;
+  background: var(--rose); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .22s, height .22s, background .22s;
+}
+#cur.big { width: 34px; height: 34px; background: rgba(255,0,132,.25); }
+
+/* ─── HEADER ─── */
 header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.3rem 3rem;
+  transition: background .4s, box-shadow .4s;
 }
-
-.logo {
-  font-size: 1.4rem;
-  font-weight: bold;
-  letter-spacing: 2px;
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-}
-
-nav a {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: bold;
-}
-
-/* --- HERO --- */
-.hero {
-  height: 100vh;
-  background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-}
-
-.hero::after {
-  content:'';
-  position:absolute;
-  inset:0;
-  background: rgba(0,0,0,0.45);
-}
-
-.hero .content {
-  position: relative;
-  z-index: 5;
-  max-width: 800px;
-}
-
-.hero h1 {
-  font-size: 3.5rem;
-  margin: 0;
-}
-
-.hero p {
-  font-size: 1.3rem;
-  margin: 1rem 0 2rem;
-  opacity: 0.9;
-}
-
-.hero a {
-  padding: 0.8rem 2.2rem;
-  border-radius: 30px;
-  background: var(--accent-color);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
-/* --- NAV SCROLL STATE --- */
 header.scrolled {
-  background: linear-gradient(
-    90deg,
-    #2b0057,
-    #6a0dad
-  );
-  box-shadow: 0 10px 30px rgba(138, 43, 226, 0.35);
-  backdrop-filter: blur(6px);
-  transition: all 0.4s ease;
+  background: rgba(13,13,18,.9);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(255,255,255,.06);
 }
-
-/* Nav links más elegantes al hacer scroll */
-header.scrolled nav a {
-  color: #ffffff;
-  opacity: 0.95;
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  background: linear-gradient(90deg, var(--white) 30%, var(--rose));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
-
-/* Hover refinado */
+nav { display: flex; align-items: center; gap: 0; }
 nav a {
-  position: relative;
+  text-decoration: none; color: var(--muted);
+  font-size: .78rem; font-weight: 500;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: .4rem 1rem;
+  position: relative; transition: color .2s;
 }
-
 nav a::after {
-  content: "";
-  position: absolute;
-  bottom: -6px;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background: #c77dff;
-  transition: width 0.3s ease;
+  content: ''; position: absolute; bottom: -2px; left: 1rem;
+  width: 0; height: 1px; background: var(--rose);
+  transition: width .3s;
 }
-
-nav a:hover::after {
-  width: 100%;
+nav a:hover { color: var(--white); }
+nav a:hover::after { width: calc(100% - 2rem); }
+.nav-cta {
+  margin-left: .8rem;
+  padding: .5rem 1.4rem !important;
+  background: linear-gradient(135deg, var(--plum), var(--rose));
+  border-radius: 30px; color: var(--white) !important;
 }
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { opacity: .85; }
 
-/* --- SECTIONS --- */
-.section {
-  padding: 5rem 2rem;
-}
-
-.section h2 {
+/* ─── HERO ─── */
+.hero {
+  height: 100vh; min-height: 620px;
+  display: flex; align-items: center; justify-content: center;
   text-align: center;
-  font-size: 2.6rem;
-  margin-bottom: 3rem;
-  color: var(--gradient-end);
-  letter-spacing: 1px;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #0d0010 0%, #1a0040 40%, #3a007d 70%, #6b0040 100%);
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  pointer-events: none; filter: blur(80px);
+}
+.orb-1 { width: 600px; height: 600px; background: rgba(138,43,226,.18); top:50%; left:50%; transform:translate(-50%,-50%); }
+.orb-2 { width: 300px; height: 300px; background: rgba(255,0,132,.14); top:18%; right:8%; }
+.orb-3 { width: 260px; height: 260px; background: rgba(58,0,125,.25); bottom:12%; left:6%; }
+
+/* circular window */
+.circular-window {
+  width: 180px; height: 180px;
+  border-radius: 50%; overflow: hidden;
+  box-shadow: 0 0 0 2px rgba(255,0,132,.45), 0 20px 60px rgba(255,0,132,.25);
+  margin: 0 auto 2.5rem;
+  position: relative; z-index: 2;
+  animation: floatBob 6s ease-in-out infinite;
+}
+@keyframes floatBob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+.slideshow {
+  width: 300%; height: 100%;
+  display: flex;
+  animation: slide 12s ease-in-out infinite;
+}
+.slide { width: calc(100%/3); height: 100%; flex-shrink: 0; }
+.slide img { width: 100%; height: 100%; object-fit: cover; }
+.slide .fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center; font-size: 3rem;
+}
+@keyframes slide {
+  0%,30%  { transform: translateX(0); }
+  34%,63% { transform: translateX(-33.333%); }
+  67%,97% { transform: translateX(-66.666%); }
+  100%    { transform: translateX(0); }
 }
 
-/* --- CARDS --- */
+.hero-content {
+  position: relative; z-index: 5;
+  display: flex; flex-direction: column; align-items: center;
+}
+.hero-eyebrow {
+  font-size: .72rem; letter-spacing: .28em; text-transform: uppercase;
+  color: var(--rose); margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: .7rem;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; display: block; width: 36px; height: 1px; background: var(--rose);
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 300; line-height: 1.08; max-width: 700px;
+}
+.hero h1 em { font-style: italic; color: var(--rose); }
+.hero-sub {
+  margin-top: 1.2rem; font-size: 1rem; font-weight: 300;
+  color: var(--muted); max-width: 420px; line-height: 1.7;
+}
+.hero-cta {
+  margin-top: 2.2rem;
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: .85rem 2.4rem;
+  background: linear-gradient(135deg, var(--plum), var(--rose));
+  color: var(--white); text-decoration: none;
+  border-radius: 40px; font-size: .9rem; font-weight: 500;
+  letter-spacing: .05em;
+  box-shadow: 0 8px 32px rgba(255,0,132,.3);
+  transition: transform .2s, box-shadow .2s;
+}
+.hero-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(255,0,132,.45); }
+.hero-cta svg { transition: transform .2s; }
+.hero-cta:hover svg { transform: translateX(4px); }
+
+/* scroll hint */
+.scroll-hint {
+  position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+  z-index: 5; display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  color: var(--muted); font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--rose));
+  animation: lineGrow 2s ease-in-out infinite;
+}
+@keyframes lineGrow {
+  0%,100% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+  50%      { opacity: 1; transform: scaleY(1); }
+}
+
+/* ─── WORKS SECTION ─── */
+.section {
+  padding: 7rem 3rem;
+}
+.section-header {
+  text-align: center; margin-bottom: 4rem;
+}
+.section-eyebrow {
+  font-size: .7rem; letter-spacing: .25em; text-transform: uppercase;
+  color: var(--rose); margin-bottom: .8rem;
+}
+.section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 300; color: var(--white);
+}
+.section h2 em { font-style: italic; color: var(--rose); }
+
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
-  gap: 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 1.5rem;
+  max-width: 1100px; margin: 0 auto;
 }
-
-.card-link {
-  text-decoration: none;
-  color: inherit;
-}
-
+.card-link { text-decoration: none; color: inherit; }
 .card {
-  background: var(--bg-color);
-  border: 1px solid var(--gradient-end);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform .35s, box-shadow .35s, border-color .35s;
 }
-
-.card img {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-}
-
-.card h3 {
-  font-size: 1.4rem;
-  margin: 0.5rem 0;
-}
-
-.card p {
-  font-size: 0.95rem;
-  opacity: 0.85;
-  line-height: 1.5;
-}
-
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(255,0,132,0.25);
+  transform: translateY(-8px);
+  box-shadow: 0 30px 70px rgba(0,0,0,.6);
+  border-color: rgba(255,0,132,.25);
+}
+.card-img {
+  position: relative; height: 220px; overflow: hidden;
+  background: var(--paper);
+}
+.card-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s;
+}
+.card:hover .card-img img { transform: scale(1.06); }
+.card-img .img-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.5rem;
+}
+.fb-1 { background: linear-gradient(135deg, #1a0040, #ff0084); }
+.fb-2 { background: linear-gradient(135deg, #001030, #0066cc); }
+.fb-3 { background: linear-gradient(135deg, #1a0010, #cc4400); }
+.fb-4 { background: linear-gradient(135deg, #100020, #8800cc); }
+.card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(13,13,18,.7) 0%, transparent 55%);
+}
+.card-body { padding: 1.4rem 1.5rem 1.7rem; }
+.card-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: .75rem; color: var(--rose); letter-spacing: .15em; margin-bottom: .3rem;
+}
+.card h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem; font-weight: 600; margin-bottom: .5rem;
+}
+.card p { font-size: .83rem; color: var(--muted); line-height: 1.65; }
+.card-arrow {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: 1rem; font-size: .78rem; color: var(--rose);
+  letter-spacing: .06em; text-transform: uppercase;
+  transition: gap .2s;
+}
+.card:hover .card-arrow { gap: .75rem; }
+
+/* ─── DIVIDER ─── */
+.divider {
+  border: none; height: 1px; margin: 0 3rem;
+  background: linear-gradient(90deg, transparent, rgba(255,0,132,.3), transparent);
 }
 
-/* --- FOOTER --- */
+/* ─── FOOTER ─── */
 footer {
-  padding: 2rem;
-  text-align: center;
-  background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+  padding: 3rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; font-weight: 700; letter-spacing: .1em;
+  background: linear-gradient(90deg, var(--white), var(--rose));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.footer-copy { font-size: .78rem; color: var(--muted); }
+.footer-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: .95rem; color: var(--muted);
+}
+
+/* ─── SCROLL REVEAL ─── */
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity .7s, transform .7s; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  header { padding: 1rem 1.5rem; }
+  nav a  { font-size: .72rem; padding: .3rem .55rem; }
+  .section { padding: 5rem 1.5rem; }
+  .divider { margin: 0 1.5rem; }
+  footer { padding: 2rem 1.5rem; }
+}
+@media (max-width: 500px) {
+  .nav-cta { display: none; }
 }
 </style>
 </head>
-
 <body>
 
-<header>
+<div id="cur"></div>
+
+<!-- ─── HEADER ─── -->
+<header id="header">
   <div class="logo">Aries Filiam</div>
-  
-
-    <nav>
-        <ul>
-            <li><a href="about me.html">ABOUT ME</a></li>
-            <li><a href="PORTFOLIO.html">PROJECTS</a></li>
-            <li><a href="#contact">CONTACT</a></li>
-            <li><a href="#contact">BUY A TEMPLATE</a></li>
-             <li><a href="#contact">CONTACT TO MY ONLINE AGENCY</a></li>
-        </ul>
-    </nav>
-
+  <nav>
+    <a href="about me.html">About Me</a>
+    <a href="PORTFOLIO.html">Projects</a>
+    <a href="#contact">Contact</a>
+    <a href="#contact">Agency</a>
+    <a href="marketplace.html" class="nav-cta">Buy a Template</a>
+  </nav>
 </header>
 
-<section class="hero">
-  <div class="circular-window">
-    <div class="slideshow">
-      <div class="slide"><img src="me.yo.jpg"></div>
-      <div class="slide"><img src="image.jpg"></div>
-      <div class="slide"><img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/image%20(1).jpg?raw=true"></div>
+<!-- ─── HERO ─── -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-content">
+
+    <div class="circular-window">
+      <div class="slideshow">
+        <div class="slide"><img src="me.yo.jpg" alt="Aries" /></div>
+        <div class="slide"><img src="image.jpg" alt="" /></div>
+        <div class="slide"><img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/image%20(1).jpg?raw=true" alt="" /></div>
+      </div>
     </div>
+
+    <div class="hero-eyebrow">Visual Artist &amp; Developer</div>
+    <h1>Art, Code &amp;<br><em>Visual Obsession</em></h1>
+    <p class="hero-sub">Selected works exploring identity, pop tension and digital ritual.</p>
+
+    <a href="#works" class="hero-cta">
+      Enter
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
   </div>
 
-  <div class="content">
-    <h1>Art, Code & Visual Obsession</h1>
-    <p>Selected works exploring identity, pop tension and digital ritual.</p>
-    <a href="#works">Enter</a>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
   </div>
 </section>
 
+<!-- ─── WORKS ─── -->
 <section class="section" id="works">
-  <h2>Selected Works</h2>
+  <div class="section-header fade-up">
+    <div class="section-eyebrow">Portfolio</div>
+    <h2>Selected <em>Works</em></h2>
+  </div>
 
   <div class="cards">
 
-    <a href="YO.DISEÑO.html" class="card-link">
+    <a href="YO.DISEÑO.html" class="card-link fade-up" style="transition-delay:.05s">
       <div class="card">
-        <img src="descarga (4).jpg">
-        <h3>Web Design</h3>
-        <p>Interfaces crafted as visual experiences, where aesthetics guide interaction.</p>
+        <div class="card-img">
+          <img src="descarga (4).jpg" alt="Web Design"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="img-fallback fb-1" style="display:none;">⬡</div>
+          <div class="card-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">01</div>
+          <h3>Web Design</h3>
+          <p>Interfaces crafted as visual experiences, where aesthetics guide interaction.</p>
+          <div class="card-arrow">View Work →</div>
+        </div>
       </div>
     </a>
 
-    <a href="YO.DEVELOPER.html" class="card-link">
+    <a href="YO.DEVELOPER.html" class="card-link fade-up" style="transition-delay:.12s">
       <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/descarga.jpg?raw=true">
-        <h3>Web Development</h3>
-        <p>Code-driven structures designed to feel fluid, intentional and alive.</p>
+        <div class="card-img">
+          <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/descarga.jpg?raw=true" alt="Web Dev"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="img-fallback fb-2" style="display:none;">⟁</div>
+          <div class="card-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">02</div>
+          <h3>Web Development</h3>
+          <p>Code-driven structures designed to feel fluid, intentional and alive.</p>
+          <div class="card-arrow">View Work →</div>
+        </div>
       </div>
     </a>
 
-    <a href="YO.GRAPHIC.html" class="card-link">
+    <a href="YO.GRAPHIC.html" class="card-link fade-up" style="transition-delay:.19s">
       <div class="card">
-        <img src="descarga (3).jpg">
-        <h3>Graphic Design</h3>
-        <p>Visual identities balancing pop intensity and conceptual restraint.</p>
+        <div class="card-img">
+          <img src="descarga (3).jpg" alt="Graphic Design"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="img-fallback fb-3" style="display:none;">✦</div>
+          <div class="card-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">03</div>
+          <h3>Graphic Design</h3>
+          <p>Visual identities balancing pop intensity and conceptual restraint.</p>
+          <div class="card-arrow">View Work →</div>
+        </div>
       </div>
     </a>
 
-    <a href="YO.ART&ILLUSTRATION.html" class="card-link">
+    <a href="YO.ART&ILLUSTRATION.html" class="card-link fade-up" style="transition-delay:.26s">
       <div class="card">
-        <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/descarga%20(2).jpg?raw=true">
-        <h3>Art & Illustration</h3>
-        <p>Illustrative work exploring desire, symbolism and contemporary myth.</p>
+        <div class="card-img">
+          <img src="https://github.com/theapistoremail-bit/Aries-Filiam/blob/main/descarga%20(2).jpg?raw=true" alt="Art & Illustration"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+          <div class="img-fallback fb-4" style="display:none;">◈</div>
+          <div class="card-overlay"></div>
+        </div>
+        <div class="card-body">
+          <div class="card-num">04</div>
+          <h3>Art &amp; Illustration</h3>
+          <p>Illustrative work exploring desire, symbolism and contemporary myth.</p>
+          <div class="card-arrow">View Work →</div>
+        </div>
       </div>
     </a>
 
   </div>
 </section>
-<script>
-  const header = document.querySelector("header");
 
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 80) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
-  });
-</script>
+<hr class="divider" />
 
-<footer>
-  © 2025 Aries Filiam — All rights reserved
+<!-- ─── FOOTER ─── -->
+<footer id="contact">
+  <div class="footer-logo">Aries Filiam</div>
+  <div class="footer-tagline">Minimal form. Maximum meaning.</div>
+  <div class="footer-copy">© 2026 Aries Filiam — All rights reserved</div>
 </footer>
+
+<script>
+  /* custom cursor */
+  const cur = document.getElementById('cur');
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX + 'px';
+    cur.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cur.classList.add('big'));
+    el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+  });
+
+  /* sticky header */
+  window.addEventListener('scroll', () => {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* scroll reveal */
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
 
 </body>
 </html>
