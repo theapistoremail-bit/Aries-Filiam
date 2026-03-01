@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aries Filiam — Projects</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --violet: #3a007d;
+            --magenta: #ff0084;
+            --mid: #8a2be2;
+            --bg: #0e0e12;
+            --surface: #16161d;
+            --white: #f5f5f0;
+            --muted: rgba(245,245,240,0.45);
+            --border: rgba(255,0,132,0.18);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Mono', monospace;
+            background: var(--bg);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* ── NOISE ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* ── HEADER ── */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1.25rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(14,14,18,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            letter-spacing: 0.02em;
+            background: linear-gradient(90deg, var(--magenta), var(--mid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .logo span {
+            font-weight: 400;
+            font-style: italic;
+            opacity: 0.8;
+            font-size: 0.85rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        nav a:hover, nav a.active { color: var(--magenta); }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            padding: 8rem 3rem 5rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(58,0,125,0.25) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            pointer-events: none;
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .hero-glow-2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,0,132,0.12) 0%, transparent 70%);
+            bottom: 0;
+            left: 5%;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.08); }
+        }
+
+        .page-hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-label {
+            font-size: 0.62rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--magenta);
+            margin-bottom: 1rem;
+            display: block;
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .page-hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            animation: fadeUp 0.85s 0.1s ease both;
+        }
+
+        .page-hero h1 em {
+            font-style: italic;
+            background: linear-gradient(90deg, var(--magenta), var(--mid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-hero-sub {
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.8;
+            max-width: 520px;
+            animation: fadeUp 1s 0.2s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── FILTER BAR ── */
+        .filter-bar {
+            max-width: 1100px;
+            margin: 0 auto 4rem;
+            padding: 0 3rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .filter-btn {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--magenta);
+            color: var(--white);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--violet), var(--magenta));
+            border-color: transparent;
+            color: var(--white);
+        }
+
+        /* ── PROJECTS GRID ── */
+        .projects-section {
+            padding: 0 3rem 8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .projects-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Card sizes */
+        .card { grid-column: span 6; }
+        .card.wide { grid-column: span 8; }
+        .card.narrow { grid-column: span 4; }
+        .card.full { grid-column: span 12; }
+
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255,0,132,0.4);
+        }
+
+        .project-card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .project-card:hover .card-img img {
+            transform: scale(1.04);
+        }
+
+        /* Card image */
+        .card-img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--violet), #1a0040);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .card.narrow .card-img { aspect-ratio: 4/5; }
+        .card.full .card-img { aspect-ratio: 21/7; }
+
+        .card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        /* Placeholder gradient when no image */
+        .card-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-placeholder-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 4rem);
+            font-style: italic;
+            opacity: 0.18;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* Overlay on hover */
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(58,0,125,0.7), rgba(255,0,132,0.4));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.35s;
+            z-index: 2;
+        }
+
+        .overlay-cta {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.7rem 1.6rem;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 100px;
+            color: var(--white);
+            text-decoration: none;
+            transition: background 0.25s;
+        }
+
+        .overlay-cta:hover { background: rgba(255,255,255,0.15); }
+
+        /* Card body */
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-type {
+            font-size: 0.58rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--magenta);
+        }
+
+        .card-year {
+            font-size: 0.58rem;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: var(--white);
+        }
+
+        .card.wide .card-title { font-size: 1.5rem; }
+        .card.full .card-title { font-size: 1.8rem; }
+
+        .card-desc {
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: var(--muted);
+            flex: 1;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .tag {
+            font-size: 0.58rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--muted);
+        }
+
+        /* ── FEATURED ROW ── */
+        .featured-label {
+            max-width: 1100px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .featured-label span {
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .featured-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 3rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.65rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            position: relative;
+            z-index: 1;
+        }
+
+        footer .footer-logo {
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(90deg, var(--magenta), var(--mid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── HIDDEN (filter) ── */
+        .project-card.hidden {
+            display: none;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .card, .card.wide, .card.narrow, .card.full {
+                grid-column: span 12;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header { padding: 1rem 1.5rem; }
+            .page-hero { padding: 6rem 1.5rem 3rem; }
+            .filter-bar { padding: 0 1.5rem; }
+            .projects-section { padding: 0 1.5rem 5rem; }
+            footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <a href="about me.html" class="logo">
+        Aries Filiam <span>— Web Development</span>
+    </a>
+    <nav>
+        <ul>
+            <li><a href="about me.html">About</a></li>
+            <li><a href="projects.html" class="active">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow-2"></div>
+    <div class="page-hero-inner">
+        <span class="section-label">02 — Selected Work</span>
+        <h1>My <em>Projects</em></h1>
+        <p class="page-hero-sub">
+            A curated selection of digital experiences, visual identities, and web solutions — each built with intention and craft.
+        </p>
+    </div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="web">Web Development</button>
+    <button class="filter-btn" data-filter="design">Visual Design</button>
+    <button class="filter-btn" data-filter="identity">Brand Identity</button>
+</div>
+
+<!-- PROJECTS -->
+<section class="projects-section">
+
+    <!-- Featured row label -->
+    <div class="featured-label">
+        <span>Featured</span>
+        <div class="featured-line"></div>
+    </div>
+
+    <div class="projects-grid">
+
+        <!-- 01 — Featured wide -->
+        <div class="card wide" data-category="web">
+            <div class="project-card">
+                <div class="card-img">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">Portfolio<br>System</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Web Development</span>
+                        <span class="card-year">2025</span>
+                    </div>
+                    <h3 class="card-title">Personal Portfolio System</h3>
+                    <p class="card-desc">
+                        A fully custom-built portfolio architecture designed with modular components, dark aesthetic, and fluid micro-interactions. Built from scratch with semantic HTML, pure CSS animations, and vanilla JS.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">UI Design</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 02 — Narrow -->
+        <div class="card narrow" data-category="identity">
+            <div class="project-card">
+                <div class="card-img" style="background: linear-gradient(135deg, #1a0040, #ff0084);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">Brand<br>ID</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Brand Identity</span>
+                        <span class="card-year">2025</span>
+                    </div>
+                    <h3 class="card-title">Visual Identity Kit</h3>
+                    <p class="card-desc">
+                        Complete brand system with logomark, color palette, typography scale, and usage guidelines.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">Branding</span>
+                        <span class="tag">Typography</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="card" data-category="design">
+            <div class="project-card">
+                <div class="card-img" style="background: linear-gradient(135deg, #0d0020, #8a2be2);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">UI<br>Kit</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Visual Design</span>
+                        <span class="card-year">2024</span>
+                    </div>
+                    <h3 class="card-title">Dark UI Component Library</h3>
+                    <p class="card-desc">
+                        A cohesive design system for dark-themed digital products — buttons, forms, cards, and navigation components with full specification sheets.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">Design Systems</span>
+                        <span class="tag">CSS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="card" data-category="web">
+            <div class="project-card">
+                <div class="card-img" style="background: linear-gradient(135deg, #1c0040, #3a007d);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">Landing<br>Page</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Web Development</span>
+                        <span class="card-year">2024</span>
+                    </div>
+                    <h3 class="card-title">Creative Agency Landing</h3>
+                    <p class="card-desc">
+                        High-conversion landing page for a creative agency featuring scroll-triggered animations, parallax sections, and contact integration.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">HTML/CSS</span>
+                        <span class="tag">Animation</span>
+                        <span class="tag">UX</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 05 — Full width -->
+        <div class="card full" data-category="identity">
+            <div class="project-card" style="flex-direction: row;">
+                <div class="card-img" style="width: 45%; aspect-ratio: auto; min-height: 280px; background: linear-gradient(135deg, #ff0084, #3a007d);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">Pop Art<br>Series</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 2.5rem;">
+                    <div class="card-meta">
+                        <span class="card-type">Brand Identity + Art Direction</span>
+                        <span class="card-year">2024</span>
+                    </div>
+                    <h3 class="card-title" style="font-size:2rem; margin-bottom:1rem;">Pop Art Digital Campaign</h3>
+                    <p class="card-desc" style="font-size:0.85rem; max-width:480px;">
+                        Inspired by Basquiat's raw energy and Malika Favre's geometric precision — a full digital campaign merging bold flat illustration with kinetic typography. Created for a cultural event series celebrating street art and graphic rebellion.
+                    </p>
+                    <div class="card-tags" style="margin-top:1.5rem;">
+                        <span class="tag">Art Direction</span>
+                        <span class="tag">Illustration</span>
+                        <span class="tag">Typography</span>
+                        <span class="tag">Campaign</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 06 — Narrow -->
+        <div class="card narrow" data-category="design">
+            <div class="project-card">
+                <div class="card-img" style="background: linear-gradient(160deg, #0e0e12, #ff0084);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">Poster</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Visual Design</span>
+                        <span class="card-year">2024</span>
+                    </div>
+                    <h3 class="card-title">Event Poster Series</h3>
+                    <p class="card-desc">
+                        A series of six limited-edition posters exploring bold compositions and halftone textures.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">Print</span>
+                        <span class="tag">Illustration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 07 — Wide -->
+        <div class="card wide" data-category="web">
+            <div class="project-card">
+                <div class="card-img" style="background: linear-gradient(135deg, #0a001a, #8a2be2, #ff0084);">
+                    <div class="card-placeholder">
+                        <span class="card-placeholder-text">E-Commerce</span>
+                    </div>
+                    <div class="card-overlay">
+                        <a href="#" class="overlay-cta">View Project →</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="card-meta">
+                        <span class="card-type">Web Development</span>
+                        <span class="card-year">2023</span>
+                    </div>
+                    <h3 class="card-title">Boutique E-Commerce Store</h3>
+                    <p class="card-desc">
+                        A fully responsive e-commerce experience for an independent fashion brand — custom product grid, cart interactions, and a minimal checkout flow designed to reduce friction and increase conversion.
+                    </p>
+                    <div class="card-tags">
+                        <span class="tag">E-Commerce</span>
+                        <span class="tag">HTML/CSS</span>
+                        <span class="tag">UX</span>
+                        <span class="tag">JavaScript</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <span class="footer-logo">Aries Filiam</span>
+    <p>© 2025 — Web Development &amp; Design. All rights reserved.</p>
+</footer>
+
+<script>
+    // Filter logic
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.projects-grid > [data-category]');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const filter = btn.dataset.filter;
+
+            cards.forEach(card => {
+                const match = filter === 'all' || card.dataset.category === filter;
+                const inner = card.querySelector('.project-card');
+                if (match) {
+                    card.style.display = '';
+                    inner.style.animation = 'fadeUp 0.4s ease both';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
